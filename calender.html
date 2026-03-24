@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Calendar</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #111;
+            color: white;
+        }
+        h1 {
+            margin: 20px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+        .month {
+            background: #222;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            color: cyan;
+        }
+        td {
+            padding: 5px;
+        }
+        .today {
+            background: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<h1 id="yearTitle"></h1>
+<div class="calendar" id="calendar"></div>
+
+<script>
+const year = 2026; // change this to any year
+
+document.getElementById("yearTitle").innerText = "📅 Calendar " + year;
+
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const container = document.getElementById("calendar");
+
+for (let month = 0; month < 12; month++) {
+
+    let firstDay = new Date(year, month, 1).getDay(); // auto start day
+    let totalDays = new Date(year, month + 1, 0).getDate(); // auto days in month
+
+    let monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
+
+    let table = "<div class='month'><h3>" + monthName + "</h3><table><tr>";
+
+    days.forEach(day => table += "<th>" + day + "</th>");
+    table += "</tr><tr>";
+
+    let count = 0;
+
+    // Empty cells
+    for (let i = 0; i < firstDay; i++) {
+        table += "<td></td>";
+        count++;
+    }
+
+    // Days
+    for (let d = 1; d <= totalDays; d++) {
+
+        let today = new Date();
+        let isToday = (d === today.getDate() && 
+                       month === today.getMonth() && 
+                       year === today.getFullYear());
+
+        if (count % 7 === 0) table += "</tr><tr>";
+
+        table += `<td class="${isToday ? 'today' : ''}">${d}</td>`;
+        count++;
+    }
+
+    table += "</tr></table></div>";
+    container.innerHTML += table;
+}
+</script>
+
+</body>
+</html>
